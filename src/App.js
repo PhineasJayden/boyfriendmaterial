@@ -9,7 +9,28 @@ export default function App() {
   const [activeCandidate, setActiveCandidate] = useState(null);
 
   function handleActiveCandidate(candidate) {
+    setActiveCandidate(() => null);
     setActiveCandidate((cur) => (cur?.id === candidate.id ? null : candidate));
+  }
+
+  function handleSubmitRating(value) {
+    setCandidates((candidates) =>
+      candidates.map((candidate) =>
+        candidate.id === activeCandidate.id
+          ? {
+              ...candidate,
+              rating: value.rating,
+              ratingValues: {
+                looks: value.looks,
+                hobbies: value.hobbies,
+                character: value.character,
+                husband: value.husband,
+              },
+            }
+          : candidate
+      )
+    );
+    setActiveCandidate(null);
   }
 
   return (
@@ -25,7 +46,10 @@ export default function App() {
         </div>
         <div className="main">
           {activeCandidate ? (
-            <CandidateInfo activeCandidate={activeCandidate} />
+            <CandidateInfo
+              activeCandidate={activeCandidate}
+              onSubmitRating={handleSubmitRating}
+            />
           ) : (
             <p>
               Please Select a Candidate from the left to get to know! You can
@@ -35,7 +59,7 @@ export default function App() {
           )}
         </div>
         <div className="sidebar-right">
-          <TopMatches />
+          <TopMatchesList candidates={candidates} />
           <Button>Submit your Dates</Button>
         </div>
         <ModalDates />
@@ -45,8 +69,12 @@ export default function App() {
     </>
   );
 }
-function Button({ children }) {
-  return <button className="button">{children}</button>;
+function Button({ children, onClick }) {
+  return (
+    <button className="button" onClick={onClick}>
+      {children}
+    </button>
+  );
 }
 
 function Header() {
@@ -91,18 +119,18 @@ function Candidate({ candidate, onSelection, activeCandidate }) {
   );
 }
 
-function CandidateInfo({ activeCandidate }) {
+function CandidateInfo({ activeCandidate, onSubmitRating }) {
   return (
     <article className="main">
       <div className="Kandidat-Info">
         <img src={activeCandidate.image} alt={activeCandidate.name} />
-        <div className="Kandidat-Info--txt">
-          <h3>
+        <div>
+          <h2>
             {activeCandidate.name}{" "}
             <button className="favorite">
               <img src="heart-icon-2.png" alt="heart" />
             </button>
-          </h3>
+          </h2>
           <ul>
             <label>Age:</label>
             <li>{activeCandidate.age}</li>
@@ -112,61 +140,118 @@ function CandidateInfo({ activeCandidate }) {
             <li>{activeCandidate.hobbies.join(", ")}</li>
             <label>Character:</label>
             <li>{activeCandidate.character.join(", ")}</li>
-            <li>Want in a Husband:</li>
+            <label>Want in a Husband: </label>
+            <li>{activeCandidate.husband}</li>
           </ul>
         </div>
       </div>
-      <Rating />
+      <Rating
+        onSubmitRating={onSubmitRating}
+        activeCandidate={activeCandidate}
+      />
     </article>
   );
 }
 
-function Rating() {
+function Rating({ onSubmitRating, activeCandidate }) {
+  const [looks, setLooks] = useState(activeCandidate.ratingValues.looks);
+  const [character, setCharacter] = useState(
+    activeCandidate.ratingValues.character
+  );
+  const [hobbies, setHobbies] = useState(activeCandidate.ratingValues.hobbies);
+  const [husband, setHusband] = useState(activeCandidate.ratingValues.husband);
+
+  const rating = (looks + character + hobbies + husband) / 4;
+
+  const ratingObject = {
+    rating: rating,
+    looks: looks,
+    hobbies: hobbies,
+    character: character,
+    husband: husband,
+  };
+
   return (
     <div className="Kandidat-Rating">
       <h3>Rating</h3>
-      <div className="Rating">
+      <div className="rating">
         <div>
-          <label>Looks</label>
-          <select>
-            <option>1</option>
-          </select>
+          <label>Looks: {looks}/10</label>
+          <input
+            type="range"
+            min="1"
+            max="10"
+            value={looks}
+            className="slider"
+            id="looks-slider"
+            onChange={(e) => setLooks(Number(e.target.value))}
+          />
         </div>
         <div>
-          <label>Hobbies</label>
-          <select>
-            <option>1</option>
-          </select>
+          <label>Hobbies: {hobbies}/10</label>
+          <input
+            type="range"
+            min="1"
+            max="10"
+            value={hobbies}
+            className="slider"
+            id="hobby-slider"
+            on
+            onChange={(e) => setHobbies(Number(e.target.value))}
+          />
         </div>
         <div>
-          <label>Character</label>
-          <select>
-            <option>1</option>
-          </select>
+          <label>Character: {character}/10</label>
+          <input
+            type="range"
+            min="1"
+            max="10"
+            value={character}
+            className="slider"
+            id="character-slider"
+            onChange={(e) => setCharacter(Number(e.target.value))}
+          />
         </div>
         <div>
-          <label>Husband Material</label>
-          <select>
-            <option>1</option>
-          </select>
+          <label>Husband Material {husband}/10</label>
+          <input
+            type="range"
+            min="1"
+            max="10"
+            value={husband}
+            className="slider"
+            id="husband-slider"
+            onChange={(e) => setHusband(Number(e.target.value))}
+          />
         </div>
       </div>
-      <Button>Submit</Button>
+      <Button onClick={() => onSubmitRating(ratingObject)}>Submit</Button>
     </div>
   );
 }
 
-function TopMatches() {
+function TopMatchesList({ candidates }) {
   return (
     <>
       <h3>Top Matches</h3>
       <ol>
-        <li>
-          Hyeonwoo
-          <input type="checkbox" />
-        </li>
+        {candidates
+          .filter((candidate) => candidate.rating > 0)
+          .sort((a, b) => Number(b.rating) - Number(a.rating))
+          .map((candidate) => (
+            <TopMatches candidate={candidate} key={candidate.id} />
+          ))}
       </ol>
     </>
+  );
+}
+
+function TopMatches({ candidate }) {
+  return (
+    <li>
+      <input type="checkbox" id={candidate.id} />
+      {candidate.name}
+    </li>
   );
 }
 
