@@ -205,6 +205,15 @@ ol {
   appearance: none;
 }
 
+.favorite-selected {
+  background-color: none;
+  border: none;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  appearance: none;
+}
+
 .favorite img {
   width: inherit;
   height: inherit;
@@ -215,4 +224,16 @@ ol {
 
 .favorite img:hover {
   opacity: 1;
+}
+
+.favorite-selected img {
+  width: inherit;
+  height: inherit;
+  opacity: 1;
+  -webkit-transition: 0.3s ease-in-out;
+  transition: 0.3s ease-in-out;
+}
+
+.favorite-selected img:hover {
+  opacity: 0.5;
 }
