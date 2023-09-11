@@ -8,12 +8,11 @@ import { CandidatesList } from "./CandidatesList";
 import { CandidateInfo } from "./CandidateInfo";
 
 export default function App() {
-  console.log(candidatesStart);
   const [candidates, setCandidates] = useState(candidatesStart);
 
   const [activeCandidate, setActiveCandidate] = useState(null);
 
-  const meetings = candidates.filter((candidate) => (candidate.meeting = true));
+  const meetings = candidates.filter((candidate) => candidate.meeting === true);
 
   function handleActiveCandidate(candidate) {
     setActiveCandidate((cur) => (cur?.id === candidate.id ? null : candidate));
@@ -88,7 +87,7 @@ export default function App() {
     </>
   );
 }
-function TopMatchesList({ candidates, onSetMeeting, meeting }) {
+function TopMatchesList({ candidates, onSetMeeting, meetings }) {
   return (
     <>
       <h3>Top Matches</h3>
@@ -99,7 +98,7 @@ function TopMatchesList({ candidates, onSetMeeting, meeting }) {
           .map((candidate) => (
             <TopMatches
               candidate={candidate}
-              meeting={meeting}
+              meetings={meetings}
               onSetMeeting={onSetMeeting}
               key={candidate.id}
             />
@@ -109,14 +108,17 @@ function TopMatchesList({ candidates, onSetMeeting, meeting }) {
   );
 }
 
-function TopMatches({ candidate, meeting, onSetMeeting }) {
-  console.log(meeting);
+function TopMatches({ candidate, meetings, onSetMeeting }) {
+  console.log(meetings.length);
   return (
     <li>
       <input
         type="checkbox"
         onChange={() => onSetMeeting(candidate.id)}
         id={candidate.id}
+        disabled={
+          meetings.length === 3 && candidate.meeting === false ? true : false
+        }
       />
       {candidate.name}
     </li>

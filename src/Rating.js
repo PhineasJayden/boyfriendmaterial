@@ -46,7 +46,6 @@ export function Rating({ onSubmitRating, activeCandidate, favorite }) {
             value={hobbies}
             className="slider"
             id="hobby-slider"
-            on
             onChange={(e) => setHobbies(Number(e.target.value))}
           />
         </div>
