@@ -6,13 +6,20 @@ import { Button } from "./Button";
 import { Header } from "./Header";
 import { CandidatesList } from "./CandidatesList";
 import { CandidateInfo } from "./CandidateInfo";
+import { TopMatchesList } from "./TopMatchesList";
 
 export default function App() {
   const [candidates, setCandidates] = useState(candidatesStart);
 
   const [activeCandidate, setActiveCandidate] = useState(null);
 
+  const [isOpen, setIsOpen] = useState(false);
+
   const meetings = candidates.filter((candidate) => candidate.meeting === true);
+
+  //const topTwo = null;
+
+  //const husbands = null;
 
   function handleActiveCandidate(candidate) {
     setActiveCandidate((cur) => (cur?.id === candidate.id ? null : candidate));
@@ -51,6 +58,11 @@ export default function App() {
     );
   }
 
+  function handleOpenModal() {
+    if (meetings.length < 3) alert("You have to pick 3 Dates");
+    if (meetings.length === 3) setIsOpen(!isOpen);
+  }
+
   return (
     <>
       <Header />
@@ -78,77 +90,70 @@ export default function App() {
             onSetMeeting={handleSetMeeting}
             meetings={meetings}
           />
-          <Button>Submit your Dates</Button>
+          <Button onClick={() => handleOpenModal()}>Submit your Dates</Button>
         </div>
-        <ModalDates />
-        <ModalSex />
-        <ModalWedding />
+        <Modal isOpen={isOpen} meetings={meetings} onClose={handleOpenModal} />
       </div>
     </>
   );
 }
-function TopMatchesList({ candidates, onSetMeeting, meetings }) {
+
+function Modal({ meetings, isOpen, onClose }) {
   return (
     <>
-      <h3>Top Matches</h3>
-      <ol>
-        {candidates
-          .filter((candidate) => candidate.rating > 0)
-          .sort((a, b) => Number(b.rating) - Number(a.rating))
-          .map((candidate) => (
-            <TopMatches
-              candidate={candidate}
-              meetings={meetings}
-              onSetMeeting={onSetMeeting}
-              key={candidate.id}
-            />
-          ))}
-      </ol>
+      <div className={isOpen === true ? "modal" : "modal hidden"}>
+        <button className="close-modal" onClick={onClose}>
+          &times;
+        </button>
+        <ModalDates meetings={meetings} />
+      </div>
+      <div
+        className={isOpen === true ? "overlay" : "overlay hidden"}
+        onClick={onClose}
+      ></div>
     </>
   );
 }
 
-function TopMatches({ candidate, meetings, onSetMeeting }) {
-  console.log(meetings.length);
-  return (
-    <li>
-      <input
-        type="checkbox"
-        onChange={() => onSetMeeting(candidate.id)}
-        id={candidate.id}
-        disabled={
-          meetings.length === 3 && candidate.meeting === false ? true : false
-        }
-      />
-      {candidate.name}
-    </li>
-  );
-}
-
-function ModalDates() {
+function ModalDates({ meetings }) {
   return (
     <div>
-      <Modal>Dates</Modal>
+      <h2>Enjoy Your Dates</h2>
+      <ul>
+        {meetings.map((candidate) => (
+          <li key={candidate.name}>
+            <div className="dateInfo">
+              <h3>{candidate.name}</h3>
+              <img src={candidate.image} alt={candidate.name} />
+              <span>{candidate.dateInfo}</span>
+            </div>
+            <input type="checkbox"></input>
+            <label>I want to go further with {candidate.name}</label>
+          </li>
+        ))}
+      </ul>
+
+      <Button>Let's go Further!</Button>
     </div>
   );
 }
 
-function ModalSex() {
+/*function ModalSex({ meetings, isOpen, onClose }) {
   return (
     <div>
-      <Modal>Sex</Modal>
+      <Modal isOpen={isOpen} onClose={onClose}>
+        Sex
+      </Modal>
     </div>
   );
 }
 
-function ModalWedding() {
+function ModalWedding({ meetings, isOpen, onClose }) {
   return (
     <div>
-      <Modal>Wedding</Modal>
+      <Modal isOpen={isOpen} onClose={() => onClose}>
+        Wedding
+      </Modal>
     </div>
   );
-}
-
-function Modal() {
-  return <div className="Modal"></div>;
-}
+}*/
