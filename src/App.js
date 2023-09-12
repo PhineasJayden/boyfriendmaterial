@@ -15,11 +15,17 @@ export default function App() {
 
   const [isOpen, setIsOpen] = useState(false);
 
+  const [relationship, setRelationship] = useState(false);
+
   const meetings = candidates.filter((candidate) => candidate.meeting === true);
+
+  const boyfriend = candidates.find(
+    (candidate) => candidate.boyfriend === true
+  );
 
   //const topTwo = null;
 
-  //const husbands = null;
+  //const boyfriends = null;
 
   function handleActiveCandidate(candidate) {
     setActiveCandidate((cur) => (cur?.id === candidate.id ? null : candidate));
@@ -36,7 +42,7 @@ export default function App() {
                 looks: value.looks,
                 hobbies: value.hobbies,
                 character: value.character,
-                husband: value.husband,
+                boyfriend: value.boyfriend,
               },
             }
           : candidate
@@ -63,6 +69,24 @@ export default function App() {
     if (meetings.length === 3) setIsOpen(!isOpen);
   }
 
+  function handlesetRelationship(id) {
+    setCandidates((candidates) =>
+      candidates.map((candidate) =>
+        candidate.id === id
+          ? {
+              ...candidate,
+              boyfriend: !candidate.boyfriend,
+            }
+          : candidate
+      )
+    );
+  }
+
+  function handleGetRelationship() {
+    setRelationship(true);
+    setIsOpen(false);
+  }
+
   return (
     <>
       <Header />
@@ -80,6 +104,8 @@ export default function App() {
               activeCandidate={activeCandidate}
               onSubmitRating={handleSubmitRating}
             />
+          ) : relationship === true ? (
+            <Relationship boyfriend={boyfriend} />
           ) : (
             <Tutorial />
           )}
@@ -92,20 +118,48 @@ export default function App() {
           />
           <Button onClick={() => handleOpenModal()}>Submit your Dates</Button>
         </div>
-        <Modal isOpen={isOpen} meetings={meetings} onClose={handleOpenModal} />
+        <Modal
+          isOpen={isOpen}
+          meetings={meetings}
+          onClose={handleOpenModal}
+          onsetRelationship={handlesetRelationship}
+          onGetRelationship={handleGetRelationship}
+          boyfriend={boyfriend}
+        />
       </div>
+      <Footer />
     </>
   );
 }
 
-function Modal({ meetings, isOpen, onClose }) {
+function Modal({
+  meetings,
+  isOpen,
+  onClose,
+  onsetRelationship,
+  onGetRelationship,
+  boyfriend,
+}) {
   return (
     <>
       <div className={isOpen === true ? "modal" : "modal hidden"}>
         <button className="close-modal" onClick={onClose}>
           &times;
         </button>
-        <ModalDates meetings={meetings} />
+        <div>
+          <ModalDates
+            meetings={meetings}
+            onsetRelationship={onsetRelationship}
+            boyfriend={boyfriend}
+          />
+          <Button
+            onClick={() => {
+              onGetRelationship();
+            }}
+          >
+            Let's get together!
+          </Button>
+        </div>
       </div>
       <div
         className={isOpen === true ? "overlay" : "overlay hidden"}
@@ -115,7 +169,7 @@ function Modal({ meetings, isOpen, onClose }) {
   );
 }
 
-function ModalDates({ meetings }) {
+function ModalDates({ meetings, onsetRelationship, boyfriend }) {
   return (
     <div>
       <h2>Enjoy Your Dates</h2>
@@ -127,33 +181,39 @@ function ModalDates({ meetings }) {
               <img src={candidate.image} alt={candidate.name} />
               <span>{candidate.dateInfo}</span>
             </div>
-            <input type="checkbox"></input>
-            <label>I want to go further with {candidate.name}</label>
+            <input
+              type="checkbox"
+              onChange={() => onsetRelationship(candidate.id)}
+              id={candidate.id}
+              disabled={
+                boyfriend && candidate.boyfriend === false ? true : false
+              }
+            ></input>
+            <label>I want to marry {candidate.name}</label>
           </li>
         ))}
       </ul>
-
-      <Button>Let's go Further!</Button>
     </div>
   );
 }
 
-/*function ModalSex({ meetings, isOpen, onClose }) {
+function Relationship({ boyfriend }) {
   return (
-    <div>
-      <Modal isOpen={isOpen} onClose={onClose}>
-        Sex
-      </Modal>
+    <div className="relationship">
+      <h2>Congratulations</h2>
+      <h3>You are getting into a Relationship with {boyfriend.name}!</h3>
+      <img src={boyfriend.image} alt={boyfriend.name} />
+      <p>"{boyfriend.message}"</p>
     </div>
   );
 }
 
-function ModalWedding({ meetings, isOpen, onClose }) {
+function Footer() {
   return (
-    <div>
-      <Modal isOpen={isOpen} onClose={() => onClose}>
-        Wedding
-      </Modal>
-    </div>
+    <footer className="footer">
+      <span>
+        (c)Phineas Kierdorf(React Programming) & Niko Müller(CSS & Images){" "}
+      </span>
+    </footer>
   );
-}*/
+}

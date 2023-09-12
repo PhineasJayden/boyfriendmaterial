@@ -7,18 +7,20 @@ export function Rating({ onSubmitRating, activeCandidate, favorite }) {
     activeCandidate.ratingValues.character
   );
   const [hobbies, setHobbies] = useState(activeCandidate.ratingValues.hobbies);
-  const [husband, setHusband] = useState(activeCandidate.ratingValues.husband);
+  const [boyfriend, setboyfriend] = useState(
+    activeCandidate.ratingValues.boyfriend
+  );
 
   const rating = favorite
-    ? (looks + character + hobbies + husband) / 2
-    : (looks + character + hobbies + husband) / 4;
+    ? (looks + character + hobbies + boyfriend) / 2
+    : (looks + character + hobbies + boyfriend) / 4;
 
   const ratingObject = {
     rating: rating,
     looks: looks,
     hobbies: hobbies,
     character: character,
-    husband: husband,
+    boyfriend: boyfriend,
   };
 
   return (
@@ -62,15 +64,15 @@ export function Rating({ onSubmitRating, activeCandidate, favorite }) {
           />
         </div>
         <div>
-          <label>Husband Material {husband}/10</label>
+          <label>boyfriend Material {boyfriend}/10</label>
           <input
             type="range"
             min="1"
             max="10"
-            value={husband}
+            value={boyfriend}
             className="slider"
-            id="husband-slider"
-            onChange={(e) => setHusband(Number(e.target.value))}
+            id="boyfriend-slider"
+            onChange={(e) => setboyfriend(Number(e.target.value))}
           />
         </div>
       </div>

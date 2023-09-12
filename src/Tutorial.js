@@ -3,7 +3,7 @@ import React from "react";
 export function Tutorial() {
   return (
     <div>
-      <h2>How to find your Husband</h2>
+      <h2>How to find your boyfriend</h2>
       <ol>
         <li>1. Choose a Candidate from the right to get more information</li>
         <li>

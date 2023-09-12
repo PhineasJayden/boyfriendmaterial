@@ -11,7 +11,7 @@ export function TopMatches({ candidate, meetings, onSetMeeting }) {
           meetings.length === 3 && candidate.meeting === false ? true : false
         }
       />
-      {candidate.name}
+      {candidate.name} ({candidate.rating})
     </li>
   );
 }

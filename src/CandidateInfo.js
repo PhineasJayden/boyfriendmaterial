@@ -28,8 +28,8 @@ export function CandidateInfo({ activeCandidate, onSubmitRating }) {
             <li>{activeCandidate.hobbies.join(", ")}</li>
             <label>Character:</label>
             <li>{activeCandidate.character.join(", ")}</li>
-            <label>Want in a Husband: </label>
-            <li>{activeCandidate.husband}</li>
+            <label>Want in a boyfriend: </label>
+            <li>{activeCandidate.boyfriend}</li>
           </ul>
         </div>
       </div>
