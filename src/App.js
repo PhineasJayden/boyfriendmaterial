@@ -7,6 +7,9 @@ import { Header } from "./Header";
 import { CandidatesList } from "./CandidatesList";
 import { CandidateInfo } from "./CandidateInfo";
 import { TopMatchesList } from "./TopMatchesList";
+import { Modal } from "./Modal";
+import { Relationship } from "./Relationship";
+import { Footer } from "./Footer";
 
 export default function App() {
   const [candidates, setCandidates] = useState(candidatesStart);
@@ -129,91 +132,5 @@ export default function App() {
       </div>
       <Footer />
     </>
-  );
-}
-
-function Modal({
-  meetings,
-  isOpen,
-  onClose,
-  onsetRelationship,
-  onGetRelationship,
-  boyfriend,
-}) {
-  return (
-    <>
-      <div className={isOpen === true ? "modal" : "modal hidden"}>
-        <button className="close-modal" onClick={onClose}>
-          &times;
-        </button>
-        <div>
-          <ModalDates
-            meetings={meetings}
-            onsetRelationship={onsetRelationship}
-            boyfriend={boyfriend}
-          />
-          <Button
-            onClick={() => {
-              onGetRelationship();
-            }}
-          >
-            Let's get together!
-          </Button>
-        </div>
-      </div>
-      <div
-        className={isOpen === true ? "overlay" : "overlay hidden"}
-        onClick={onClose}
-      ></div>
-    </>
-  );
-}
-
-function ModalDates({ meetings, onsetRelationship, boyfriend }) {
-  return (
-    <div>
-      <h2>Enjoy Your Dates</h2>
-      <ul>
-        {meetings.map((candidate) => (
-          <li key={candidate.name}>
-            <div className="dateInfo">
-              <h3>{candidate.name}</h3>
-              <img src={candidate.image} alt={candidate.name} />
-              <span>{candidate.dateInfo}</span>
-            </div>
-            <input
-              type="checkbox"
-              onChange={() => onsetRelationship(candidate.id)}
-              id={candidate.id}
-              disabled={
-                boyfriend && candidate.boyfriend === false ? true : false
-              }
-            ></input>
-            <label>I want to marry {candidate.name}</label>
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-}
-
-function Relationship({ boyfriend }) {
-  return (
-    <div className="relationship">
-      <h2>Congratulations</h2>
-      <h3>You are getting into a Relationship with {boyfriend.name}!</h3>
-      <img src={boyfriend.image} alt={boyfriend.name} />
-      <p>"{boyfriend.message}"</p>
-    </div>
-  );
-}
-
-function Footer() {
-  return (
-    <footer className="footer">
-      <span>
-        (c)Phineas Kierdorf(React Programming) & Niko Müller(CSS & Images){" "}
-      </span>
-    </footer>
   );
 }
