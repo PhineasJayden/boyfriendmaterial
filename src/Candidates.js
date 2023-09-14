@@ -20,7 +20,7 @@ export const candidatesStart = [
     meeting: false,
     dateInfo:
       "Would like to go out on a fun date with you. Maybe to a Club to dance the night away together.",
-    poly: false,
+    message: "Let's have fun together!",
     rating: 0,
     ratingValues: { looks: 5, hobbies: 5, character: 5, boyfriend: 5 },
   },

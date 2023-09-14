@@ -1,6 +1,6 @@
 import React from "react";
 
-export function ModalDates({ meetings, onsetRelationship, boyfriend }) {
+export function ModalDates({ meetings, onsetRelationship}) {
   return (
     <div>
       <h2>Enjoy Your Dates</h2>
@@ -12,18 +12,17 @@ export function ModalDates({ meetings, onsetRelationship, boyfriend }) {
               <img src={candidate.image} alt={candidate.name} />
               <span>{candidate.dateInfo}</span>
             </div>
-            <input
-              type="checkbox"
-              onChange={() => onsetRelationship(candidate.id)}
-              id={candidate.id}
-              disabled={
-                boyfriend && candidate.boyfriend === false ? true : false
-              }
-            ></input>
-            <label>I want to date {candidate.name}</label>
           </li>
         ))}
       </ul>
+      <select onChange={(e) => onsetRelationship(e.target.value)}>
+        <option value="" selected disabled hidden>
+          Choose a Boyfriend!
+        </option>
+        <option value={meetings[0]?.id}>{meetings[0]?.name}</option>
+        <option value={meetings[1]?.id}>{meetings[1]?.name}</option>
+        <option value={meetings[2]?.id}>{meetings[2]?.name}</option>
+      </select>
     </div>
   );
 }

@@ -20,13 +20,12 @@ export function Modal({
           <ModalDates
             meetings={meetings}
             onsetRelationship={onsetRelationship}
-            boyfriend={boyfriend}
           />
+
           <Button
             onClick={() => {
               onGetRelationship();
-            }}
-          >
+            }}>
             Let's get together!
           </Button>
         </div>

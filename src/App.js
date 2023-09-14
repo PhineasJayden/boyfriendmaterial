@@ -73,14 +73,15 @@ export default function App() {
   }
 
   function handlesetRelationship(id) {
+    console.log(id, boyfriend);
     setCandidates((candidates) =>
       candidates.map((candidate) =>
-        candidate.id === id
+        candidate.id === Number(id)
           ? {
               ...candidate,
-              boyfriend: !candidate.boyfriend,
+              boyfriend: true,
             }
-          : candidate
+          : { ...candidate, boyfriend: false }
       )
     );
   }
@@ -88,6 +89,11 @@ export default function App() {
   function handleGetRelationship() {
     setRelationship(true);
     setIsOpen(false);
+  }
+
+  function handleRestart() {
+    setCandidates(candidatesStart);
+    setRelationship(false);
   }
 
   return (
@@ -108,7 +114,10 @@ export default function App() {
               onSubmitRating={handleSubmitRating}
             />
           ) : relationship === true ? (
-            <Relationship boyfriend={boyfriend} />
+            <div className="relationship">
+              <Relationship boyfriend={boyfriend} />
+              <Button onClick={() => handleRestart()}>Reset Everything</Button>
+            </div>
           ) : (
             <Tutorial />
           )}

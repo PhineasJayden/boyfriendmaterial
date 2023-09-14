@@ -64,7 +64,7 @@ export function Rating({ onSubmitRating, activeCandidate, favorite }) {
           />
         </div>
         <div>
-          <label>boyfriend Material {boyfriend}/10</label>
+          <label>Boyfriend Material {boyfriend}/10</label>
           <input
             type="range"
             min="1"

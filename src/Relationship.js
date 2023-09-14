@@ -6,7 +6,7 @@ export function Relationship({ boyfriend }) {
       <h2>Congratulations</h2>
       <h3>You are getting into a Relationship with {boyfriend.name}!</h3>
       <img src={boyfriend.image} alt={boyfriend.name} />
-      <p>"{boyfriend.message}"</p>
+      <p className="quote">"{boyfriend.message}"</p>
     </div>
   );
 }
